@@ -28,3 +28,25 @@ class TestEnergyManagementSystem:
         assert result.energy_saving_mode is True
         assert result.device_status["Light"] is False
         assert result.device_status["Heating"] is True
+
+    def test_tc2_no_energy_saving_mode(self):
+        """
+        TC2: Sem modo economia.
+        Cobertura: Aresta nó 3 → nó 6 (current_price <= price_threshold)
+        Par def-uso: device_status[device] definido (linha 35),
+        usado posteriormente
+        """
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Light": 1, "TV": 2},
+            current_time=self.base_time,
+            current_temperature=20.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=50.0,
+            scheduled_devices=[]
+        )
+        assert result.energy_saving_mode is False
+        assert result.device_status["Light"] is True
+        assert result.device_status["TV"] is True
