@@ -98,3 +98,102 @@ class TestEnergyManagementSystem:
         assert result.device_status["Light"] is False
         assert result.device_status["Security"] is True
         assert result.device_status["Refrigerator"] is True
+
+    def test_tc5_low_temperature_heating_activated(self):
+        """
+        TC5: Temperatura baixa - aquecimento ativado.
+        Cobertura: Aresta nó 16 → nó 21 (current_temperature < desired_temperature_range[0])
+        Par def-uso: temperature_regulation_active definido (linha 46), usado no retorno
+        """
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Heating": 1, "Cooling": 1},
+            current_time=self.base_time,
+            current_temperature=15.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=50.0,
+            scheduled_devices=[]
+        )
+        assert result.device_status["Heating"] is True
+        assert result.temperature_regulation_active is True
+
+    def test_tc6_high_temperature_cooling_activated(self):
+        """
+        TC6: Temperatura alta - resfriamento ativado.
+        Cobertura: Aresta nó 16 → nó 23 → nó 24 (current_temperature > desired_temperature_range[1])
+        Par def-uso: device_status["Cooling"] definido (linha 48)
+        """
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Heating": 1, "Cooling": 1},
+            current_time=self.base_time,
+            current_temperature=28.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=50.0,
+            scheduled_devices=[]
+        )
+        assert result.device_status["Cooling"] is True
+        assert result.temperature_regulation_active is True
+
+    def test_tc7_ideal_temperature_climate_control_off(self):
+        """
+        TC7: Temperatura ideal - climatização desligada.
+        Cobertura: Aresta nó 23 → nó 26 (temperatura na faixa desejada)
+        Par def-uso: device_status["Heating"] e ["Cooling"] definidos como False
+        """
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Heating": 1, "Cooling": 1},
+            current_time=self.base_time,
+            current_temperature=21.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=50.0,
+            scheduled_devices=[]
+        )
+        assert result.device_status["Heating"] is False
+        assert result.device_status["Cooling"] is False
+        assert result.temperature_regulation_active is False
+
+    def test_tc8_energy_limit_loop_devices_turned_off(self):
+        """
+        TC8: Loop de limite de energia - dispositivos desligados.
+        Cobertura: Aresta nó 27 → nó 28 → nó 31 → nó 32 → nó 35
+        Par def-uso: total_energy_used_today modificado (linha 70) e usado (linha 67)
+        """
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Light": 2, "TV": 3, "Security": 1},
+            current_time=self.base_time,
+            current_temperature=20.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=120.0,
+            scheduled_devices=[]
+        )
+        assert result.total_energy_used < 120.0
+
+    def test_tc9_energy_limit_loop_exit_by_limit(self):
+        """
+        TC9: Loop de limite de energia - saída por atingir limite.
+        Cobertura: Aresta nó 32 → nó 27 (break do loop quando atinge limite)
+        Par def-uso: total_energy_used_today verificado durante loop
+        """
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Light": 2, "TV": 3},
+            current_time=self.base_time,
+            current_temperature=20.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=101.0,  # Apenas 1 acima do limite
+            scheduled_devices=[]
+        )
+        assert result.total_energy_used <= 100.0
