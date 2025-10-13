@@ -76,3 +76,25 @@ class TestEnergyManagementSystem:
         assert result.device_status["TV"] is False
         assert result.device_status["Security"] is True
         assert result.device_status["Refrigerator"] is True
+
+    def test_tc4_night_mode_early_morning(self):
+        """
+        TC4: Modo noturno na madrugada (< 6h).
+        Cobertura: Aresta nó 5 → nó 15 (current_time.hour < 6)
+        """
+        early_morning = datetime(2024, 1, 1, 3, 0, 0)
+        result = self.system.manage_energy(
+            current_price=50.0,
+            price_threshold=100.0,
+            device_priorities={"Light": 1, "Security": 1, "Refrigerator": 1},
+            current_time=early_morning,
+            current_temperature=20.0,
+            desired_temperature_range=(18.0, 24.0),
+            energy_usage_limit=100.0,
+            total_energy_used_today=50.0,
+            scheduled_devices=[]
+        )
+
+        assert result.device_status["Light"] is False
+        assert result.device_status["Security"] is True
+        assert result.device_status["Refrigerator"] is True
