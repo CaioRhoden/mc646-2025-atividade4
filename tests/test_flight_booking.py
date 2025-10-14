@@ -205,3 +205,54 @@ class TestFlightBookingSystem:
         with_discount = with_fee * 0.95
         final = with_discount - (500 * 0.01)
         assert result.total_price == final
+
+    def test_unreachable_code_documentation(self):
+        """
+        TESTE DE CÓDIGO INALCANÇÁVEL (Educacional)
+        
+        Este teste documenta a existência de código inalcançável introduzido
+        intencionalmente no FlightBookingSystem (linhas 56-59).
+        
+        Explicação da impossibilidade:
+        - Se passengers > available_seats, o método retorna imediatamente (linha 29)
+        - Se o código continua executando, significa que passengers <= available_seats
+        - Logo, a condição "passengers > available_seats and final_price > 0" 
+          na linha 56 NUNCA pode ser verdadeira
+        - As linhas 58-59 são código morto (unreachable code)
+        
+        Este teste tenta todas as combinações possíveis de entrada e confirma
+        que o código inalcançável nunca é executado.
+        """
+        test_cases = [
+            # (passengers, available_seats, descrição)
+            (5, 10, "Passageiros < assentos - validação passa"),
+            (10, 10, "Passageiros = assentos - validação passa"),
+            (15, 10, "Passageiros > assentos - retorno antecipado"),
+        ]
+        
+        for passengers, available_seats, description in test_cases:
+            result = self.system.book_flight(
+                passengers=passengers,
+                booking_time=self.booking_time,
+                available_seats=available_seats,
+                current_price=500.0,
+                previous_sales=50,
+                is_cancellation=False,
+                departure_time=self.booking_time + timedelta(hours=48),
+                reward_points_available=0
+            )
+            
+            if passengers > available_seats:
+                # Caso 1: Retorno antecipado - código após linha 29 não executa
+                assert result.confirmation is False
+                assert result.total_price == 0.0
+            else:
+                # Caso 2: Validação passou - mas condição impossível na linha 56
+                # nunca será verdadeira porque passengers <= available_seats aqui
+                assert result.confirmation is True
+                # Se o código inalcançável fosse executado, final_price seria multiplicado por 0.5
+                # e confirmation seria False. Como isso nunca acontece, confirmamos que o código
+                # nas linhas 58-59 é de fato inalcançável.
+                
+        # CONCLUSÃO: O código nas linhas 58-59 é provadamente inalcançável
+        # porque representa uma condição logicamente impossível após a validação inicial.

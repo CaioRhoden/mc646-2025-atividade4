@@ -1,5 +1,5 @@
-digraph clustergrafo_check_for_fraud {
-	graph [label=grafo_check_for_fraud]
+digraph clusterfraud_cfg {
+	graph [label=fraud_cfg]
 	1 [label="from src.fraud.Transaction import Transaction
 from src.fraud.FraudCheckResult import FraudCheckResult
 \"\"\"Um sistema para detectar transações potencialmente fraudulentas.\"\"\"

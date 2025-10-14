@@ -1,5 +1,5 @@
-digraph clustergrafo_manage_energy {
-	graph [label=grafo_manage_energy]
+digraph clusterenergy_cfg {
+	graph [label=energy_cfg]
 	1 [label="from datetime import datetime
 from src.energy.DeviceSchedule import DeviceSchedule
 from src.energy.EnergyManagementResult import EnergyManagementResult
