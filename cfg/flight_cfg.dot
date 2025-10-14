@@ -1,0 +1,189 @@
+digraph clusterflight_cfg {
+	graph [bb="0,0,2172.5,1610.6",
+		label=flight_cfg,
+		lheight=0.24,
+		lp="1086.3,12.625",
+		lwidth=0.93
+	];
+	node [label="\N"];
+	subgraph clusterbook_flight {
+		graph [bb="703.54,33.25,2164.5,1602.6",
+			label=book_flight,
+			lheight=0.24,
+			lp="1434,1590",
+			lwidth=1.09
+		];
+		3	[height=2.8677,
+			label="
+final_price = 0.0
+refund_\
+amount = 0.0
+confirmation = False
+points_used = False
+if passengers > available_seats:
+",
+			pos="1398.5,1466.1",
+			width=12.969];
+		4	[height=0.5,
+			label="return BookingResult(confirmation, final_price, refund_amount, points_used)
+",
+			pos="1107.5,1243",
+			width=11.009];
+		3 -> 4	[label="passengers > available_seats",
+			lp="1340.6,1336.2",
+			pos="e,1130.3,1261.3 1268.8,1366.5 1221,1330.2 1170.9,1292.1 1139.5,1268.2"];
+		5	[height=1.8512,
+			label="price_factor = previous_sales / 100.0 * 0.8
+final_price = current_price * price_factor * passengers
+time_difference = departure_\
+time - booking_time
+hours_to_departure = time_difference.total_seconds() / 3600
+if hours_to_departure < 24:
+",
+			pos="1839.5,1243",
+			width=8.8143];
+		3 -> 5	[label="(passengers <= available_seats)",
+			lp="1787.8,1336.2",
+			pos="e,1718,1304.9 1585.9,1371.1 1626.9,1350.6 1669.5,1329.2 1707.8,1310"];
+		"5_calls"	[height=0.5,
+			label="time_difference.total_seconds",
+			pos="1576.5,1105.1",
+			shape=box,
+			width=3.1701];
+		5 -> "5_calls"	[label=calls,
+			lp="1692.9,1149.7",
+			pos="e,1610.2,1123.4 1721.1,1180.8 1685.2,1162.2 1648,1143 1620.3,1128.7",
+			style=dashed];
+		7	[height=0.5,
+			label="final_price += 100
+",
+			pos="1814.5,1105.1",
+			width=2.9277];
+		5 -> 7	[label="hours_to_departure < 24",
+			lp="1861.3,1149.7",
+			pos="e,1787,1122.8 1780.9,1177.3 1777.4,1171.2 1774.3,1164.8 1772,1158.3 1769.5,1151.1 1768.8,1148 1772,1141.1 1773.8,1137.3 1776.2,1133.8 \
+1779,1130.6"];
+		8	[height=0.5,
+			label="if passengers > 4:
+",
+			pos="1918.5,1032.1",
+			width=2.84];
+		5 -> 8	[label="(hours_to_departure >= 24)",
+			lp="2057.3,1105.1",
+			pos="e,1930.1,1050.1 1936.7,1179.2 1942.1,1172.7 1946.8,1165.8 1950.5,1158.3 1966.5,1126.4 1950.3,1085.8 1935.7,1059.7"];
+		7 -> 8	[pos="e,1893.7,1050 1839.2,1087.2 1852.7,1078 1869.6,1066.5 1884.4,1056.4"];
+		9	[height=0.5,
+			label="final_price *= 0.95
+",
+			pos="1809.5,942.81",
+			width=2.9131];
+		8 -> 9	[label="passengers > 4",
+			lp="1890,987.44",
+			pos="e,1814.3,961.28 1866.6,1016.3 1855.1,1011.3 1843.6,1004.7 1834.5,996.06 1827.6,989.44 1822.3,980.47 1818.5,971.84"];
+		10	[height=0.5,
+			label="if reward_points_available > 0:
+",
+			pos="1871.5,869.81",
+			width=4.6229];
+		8 -> 10	[label="(passengers <= 4)",
+			lp="2008.2,942.81",
+			pos="e,1891.5,888.05 1935.3,1013.9 1939.5,1008.6 1943.4,1002.5 1945.5,996.06 1948,988.81 1947,986.34 1945.5,978.81 1940.6,953.38 1937.7,\
+946.54 1923.5,924.81 1916.9,914.58 1908.1,904.61 1899.7,896.06"];
+		9 -> 10	[pos="e,1856.7,887.84 1824.6,924.63 1831.9,916.17 1841,905.8 1849.2,896.42"];
+		11	[height=0.83478,
+			label="final_price -= reward_points_available * 0.01
+points_used = True
+",
+			pos="1614.5,768.51",
+			width=6.5898];
+		10 -> 11	[label="reward_points_available > 0",
+			lp="1781.3,825.19",
+			pos="e,1637.5,798.86 1748.2,857.43 1724.7,852.2 1701,844.67 1680,833.81 1667.2,827.15 1655.2,817.14 1645.1,806.98"];
+		12	[height=0.5,
+			label="if final_price < 0:
+",
+			pos="1844.5,683.46",
+			width=2.7085];
+		10 -> 12	[label="(reward_points_available <= 0)",
+			lp="1991.9,768.51",
+			pos="e,1851.2,701.64 1878.1,851.61 1879.9,846.02 1881.6,839.73 1882.5,833.81 1883.7,826.23 1883.6,824.16 1882.5,816.56 1877.5,779.7 1864.5,\
+738.73 1855.1,712.34"];
+		11 -> 12	[pos="e,1801.4,700.05 1691.8,739.62 1724.3,727.87 1761.4,714.48 1790.9,703.84"];
+		13	[height=0.5,
+			label="final_price = 0
+",
+			pos="1732.5,594.21",
+			width=2.3431];
+		12 -> 13	[label="final_price < 0",
+			lp="1795.4,638.83",
+			pos="e,1731.9,612.65 1777.3,670.12 1764.5,664.99 1752.3,657.73 1743.3,647.46 1737.6,641.02 1734.7,632.42 1733.2,624.06"];
+		14	[height=0.5,
+			label="if passengers > available_seats and final_price > 0:
+",
+			pos="1752.5,521.21",
+			width=7.4873];
+		12 -> 14	[label="(final_price >= 0)",
+			lp="1908.8,594.21",
+			pos="e,1783.4,539.56 1846.3,665.03 1846.8,659.43 1847.3,653.19 1847.5,647.46 1849,614.35 1845.9,602.38 1825.5,576.21 1816.5,564.62 1804.4,\
+554.31 1792.7,545.89"];
+		13 -> 14	[pos="e,1747.7,539.24 1737.4,576.02 1739.6,568.26 1742.2,558.89 1744.7,550.16"];
+		15	[height=0.83478,
+			label="final_price = final_price * 0.5
+confirmation = False
+",
+			pos="1481.5,419.91",
+			width=4.3949];
+		14 -> 15	[label="passengers > available_seats and final_price > 0",
+			lp="1576.8,476.58",
+			pos="e,1417.1,447.83 1537,510.08 1470.8,504.75 1412.6,496.83 1402,485.21 1392.2,474.3 1397,463.71 1408.1,454.39"];
+		16	[height=0.5,
+			label="if is_cancellation:
+",
+			pos="1548.5,334.85",
+			width=2.7085];
+		14 -> 16	[label="(not (passengers > available_seats and final_price > 0))",
+			lp="1939.6,419.91",
+			pos="e,1596.2,350.96 1755.9,502.82 1757.1,492.19 1757,478.63 1751.5,467.96 1722.4,410.7 1655.7,374.73 1606.7,355.04"];
+		15 -> 16	[pos="e,1534.8,352.9 1505,389.86 1512.4,380.69 1520.5,370.63 1527.7,361.71"];
+		17	[height=0.5,
+			label="if hours_to_departure >= 48:
+",
+			pos="1132.5,233.55",
+			width=4.3891];
+		16 -> 17	[label=is_cancellation,
+			lp="1442.2,290.23",
+			pos="e,1198.5,250.29 1490.7,320.05 1417.5,302.56 1291,272.38 1209.6,252.96"];
+		18	[height=0.83478,
+			label="confirmation = True
+return BookingResult(confirmation, final_price, refund_amount, points_used)
+",
+			pos="1708.5,233.55",
+			width=11.098];
+		16 -> 18	[label="(not is_cancellation)",
+			lp="1699.8,290.23",
+			pos="e,1661.6,263.7 1575.3,317.23 1596.1,304.31 1625.8,285.92 1651.8,269.76"];
+		19	[height=0.5,
+			label="refund_amount = final_price
+",
+			pos="963.54,132.25",
+			width=4.2722];
+		17 -> 19	[label="hours_to_departure >= 48",
+			lp="1143.3,176.88",
+			pos="e,992.5,150.26 1103.5,215.48 1075.5,199.02 1032.9,174 1002.1,155.88"];
+		21	[height=0.5,
+			label="refund_amount = final_price * 0.5
+",
+			pos="1315.5,132.25",
+			width=5.0175];
+		17 -> 21	[label="(hours_to_departure < 48)",
+			lp="1364.1,176.88",
+			pos="e,1294,150.56 1177.5,215.9 1197.8,207.72 1221.9,197.12 1242.5,185.5 1257,177.34 1272.2,166.89 1284.8,157.49"];
+		20	[height=0.5,
+			label="return BookingResult(False, 0, refund_amount, False)
+",
+			pos="1094.5,59.25",
+			width=7.7504];
+		19 -> 20	[pos="e,1062.5,77.611 994.92,114.24 1012.2,104.9 1033.8,93.179 1052.5,83.05"];
+		21 -> 20	[pos="e,1147.6,77.285 1263.7,114.6 1232.2,104.47 1191.7,91.449 1158.2,80.692"];
+	}
+}

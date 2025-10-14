@@ -18,9 +18,9 @@ class TestEnergyManagementSystem:
         result = self.system.manage_energy(
             current_price=150.0,
             price_threshold=100.0,
-            device_priorities={"Light": 2, "Heating": 1},
+            device_priorities={"Light": 2, "Heating": 1, "TV": 3},
             current_time=self.base_time,
-            current_temperature=20.0,
+            current_temperature=15.0,  # Temperatura baixa para ativar aquecimento
             desired_temperature_range=(18.0, 24.0),
             energy_usage_limit=100.0,
             total_energy_used_today=50.0,
@@ -28,7 +28,8 @@ class TestEnergyManagementSystem:
         )
         assert result.energy_saving_mode is True
         assert result.device_status["Light"] is False
-        assert result.device_status["Heating"] is True
+        assert result.device_status["TV"] is False
+        assert result.device_status["Heating"] is True  # Mantido ligado por prioridade 1 e necessário para aquecimento
 
     def test_tc2_no_energy_saving_mode(self):
         """
@@ -182,22 +183,29 @@ class TestEnergyManagementSystem:
 
     def test_tc9_energy_limit_loop_exit_by_limit(self):
         """
-        TC9: Loop de limite de energia - saída por atingir limite.
-        Cobertura: Aresta nó 32 → nó 27 (break do loop quando atinge limite)
-        Par def-uso: total_energy_used_today verificado durante loop
+        TC9: Loop de limite de energia - saída por atingir limite (break interno).
+        Cobertura: Linha 68 (break quando total_energy_used_today < energy_usage_limit)
+        Este teste força a condição onde, ao desligar dispositivos para economizar energia,
+        o consumo cai abaixo do limite ANTES de processar todos os dispositivos da lista.
+        Par def-uso: total_energy_used_today verificado durante loop (linha 67-68)
         """
         result = self.system.manage_energy(
             current_price=50.0,
             price_threshold=100.0,
-            device_priorities={"Light": 2, "TV": 3},
+            device_priorities={"Light": 2, "TV": 3, "Radio": 4, "Alarm": 5, "Security": 1, "Heating": 1},
             current_time=self.base_time,
-            current_temperature=20.0,
+            current_temperature=15.0,  # Ativa aquecimento
             desired_temperature_range=(18.0, 24.0),
             energy_usage_limit=100.0,
-            total_energy_used_today=101.0,  # Apenas 1 acima do limite
+            total_energy_used_today=102.5,  # Acima do limite com valor fracionário
             scheduled_devices=[]
         )
-        assert result.total_energy_used <= 100.0
+        # Com 102.5: desliga 1 (101.5), desliga 2 (100.5), desliga 3 (99.5 < 100, break!)
+        assert result.total_energy_used < 100.0
+        # Pelo menos um dispositivo de alta prioridade deve ainda estar ligado (não desligou todos)
+        high_priority_devices = [result.device_status.get("Light"), result.device_status.get("TV"),
+                                  result.device_status.get("Radio"), result.device_status.get("Alarm")]
+        assert True in high_priority_devices  # Pelo menos 1 ainda ligado devido ao break
 
     def test_tc10_energy_limit_loop_no_devices_to_turn_off(self):
         """

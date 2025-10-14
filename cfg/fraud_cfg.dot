@@ -1,9 +1,9 @@
-digraph clustergrafo_check_for_fraud {
+digraph clusterfraud_cfg {
 	graph [bb="0,0,2048.4,1480.2",
-		label=grafo_check_for_fraud,
+		label=fraud_cfg,
 		lheight=0.24,
 		lp="1024.2,12.625",
-		lwidth=2.18
+		lwidth=0.93
 	];
 	node [label="\N"];
 	subgraph clustercheck_for_fraud {
@@ -12,20 +12,19 @@ digraph clustergrafo_check_for_fraud {
 			lheight=0.24,
 			lp="1362.5,1459.6",
 			lwidth=1.56
-		];	3	[height=2.8677,
-			label="[3] \"\"\"
-        Verifica a transação atual contra um conjunto de regras para identificar fraudes.
-        \"\"\"
+		];
+		3	[height=2.8677,
+			label="
 is_fraudulent = False
 \
 is_blocked = False
 verification_required = False
 risk_score = 0
-if current_transaction.amount > 10000:
 ",
 			pos="1224.5,1335.7",
-			width=12.32];	4	[height=1.1736,
-			label="[4] is_fraudulent = True
+			width=12.32];
+		4	[height=1.1736,
+			label="is_fraudulent = True
 verification_required = True
 risk_score += 50
 ",
@@ -33,21 +32,24 @@ risk_score += 50
 			width=4.3065];
 		3 -> 4	[label="current_transaction.amount > 10000",
 			lp="1340.7,1205.8",
-			pos="e,1215.9,1178.5 1203,1232.2 1203.2,1220.3 1204.7,1208.4 1208,1197.2 1208.8,1194.4 1209.8,1191.7 1210.9,1188.9"];	5	[height=0.5,
-			label="[5] recent_transaction_count = 0
+			pos="e,1215.9,1178.5 1203,1232.2 1203.2,1220.3 1204.7,1208.4 1208,1197.2 1208.8,1194.4 1209.8,1191.7 1210.9,1188.9"];
+		5	[height=0.5,
+			label="recent_transaction_count = 0
 ",
 			pos="1461.5,1039.7",
 			width=4.4037];
 		3 -> 5	[label="(current_transaction.amount <= 10000)",
 			lp="1633.1,1137",
 			pos="e,1468.9,1058.1 1447.7,1246 1457.5,1236.5 1466.2,1226 1473.5,1214.5 1501.6,1169.7 1485.7,1105 1472.8,1068.5"];
-		4 -> 5	[pos="e,1423.5,1057.5 1326.5,1100.5 1355.6,1087.6 1387.5,1073.5 1413,1062.2"];	6	[height=0.5,
-			label="[6] for transaction in previous_transactions:
+		4 -> 5	[pos="e,1423.5,1057.5 1326.5,1100.5 1355.6,1087.6 1387.5,1073.5 1413,1062.2"];
+		6	[height=0.5,
+			label="for transaction in previous_transactions:
 ",
 			pos="1461.5,966.71",
 			width=5.9528];
-		5 -> 6	[pos="e,1461.5,984.73 1461.5,1021.5 1461.5,1013.9 1461.5,1004.8 1461.5,996.24"];	7	[height=1.1736,
-			label="[7] time_difference = current_transaction.timestamp - transaction.timestamp
+		5 -> 6	[pos="e,1461.5,984.73 1461.5,1021.5 1461.5,1013.9 1461.5,1004.8 1461.5,996.24"];
+		7	[height=1.1736,
+			label="time_difference = current_transaction.timestamp - transaction.timestamp
 time_diff_minutes = time_difference.total_seconds() / 60
 \
 if time_diff_minutes <= 60:
@@ -56,8 +58,9 @@ if time_diff_minutes <= 60:
 			width=10.715];
 		6 -> 7	[label=previous_transactions,
 			lp="1503.1,922.08",
-			pos="e,1441,894.32 1437.3,948.44 1426.4,938.44 1417.4,925.48 1424.7,913.46 1427.1,909.53 1429.9,905.85 1432.9,902.41"];	8	[height=0.5,
-			label="[8] if recent_transaction_count > 10:
+			pos="e,1441,894.32 1437.3,948.44 1426.4,938.44 1417.4,925.48 1424.7,913.46 1427.1,909.53 1429.9,905.85 1432.9,902.41"];
+		8	[height=0.5,
+			label="if recent_transaction_count > 10:
 ",
 			pos="957.48,853.21",
 			width=4.9445];
@@ -73,8 +76,9 @@ if time_diff_minutes <= 60:
 		7 -> "7_calls"	[label=calls,
 			lp="1525.6,784.33",
 			pos="e,1488,746.11 1519.3,810.72 1510.7,792.84 1500.7,772.4 1493,756.39",
-			style=dashed];	9	[height=0.5,
-			label="[9] recent_transaction_count += 1
+			style=dashed];
+		9	[height=0.5,
+			label="recent_transaction_count += 1
 ",
 			pos="1778.5,727.65",
 			width=4.6376];
@@ -82,16 +86,18 @@ if time_diff_minutes <= 60:
 			lp="1776.7,784.33",
 			pos="e,1745.6,745.67 1618.4,811.41 1657.4,791.24 1703,767.68 1735.5,750.87"];
 		9 -> 6	[pos="e,1668.8,961.86 1841.8,744.69 1875.7,756.86 1914.5,777.41 1934.5,810.96 1953.7,843.23 1958.1,866.23 1934.5,895.46 1901.9,935.9 1788,\
-953.59 1680.2,961.1"];	11	[height=0.83478,
-			label="[11] is_blocked = True
+953.59 1680.2,961.1"];
+		11	[height=0.83478,
+			label="is_blocked = True
 risk_score += 30
 ",
 			pos="1245.5,727.65",
 			width=2.8186];
 		8 -> 11	[label="recent_transaction_count > 10",
 			lp="1245.2,784.33",
-			pos="e,1188.7,753.02 996.93,835.29 1043.6,815.25 1122.2,781.56 1178.5,757.41"];	12	[height=0.5,
-			label="[12] if previous_transactions:
+			pos="e,1188.7,753.02 996.93,835.29 1043.6,815.25 1122.2,781.56 1178.5,757.41"];
+		12	[height=0.5,
+			label="if previous_transactions:
 ",
 			pos="1249.5,642.6",
 			width=3.7315];
@@ -110,8 +116,9 @@ if minutes_since_last < 30 and last_transaction.location != current_transaction.
 			width=12.703];
 		12 -> 13	[label=previous_transactions,
 			lp="1335.2,597.98",
-			pos="e,1259.7,571.69 1252,624.14 1253.6,613.1 1255.8,598.08 1258,582.8"];	14	[height=0.5,
-			label="[14] if current_transaction.location in blacklisted_locations:
+			pos="e,1259.7,571.69 1252,624.14 1253.6,613.1 1255.8,598.08 1258,582.8"];
+		14	[height=0.5,
+			label="if current_transaction.location in blacklisted_locations:
 ",
 			pos="1125.5,269.71",
 			width=7.9257];
@@ -127,8 +134,9 @@ if minutes_since_last < 30 and last_transaction.location != current_transaction.
 		13 -> "13_calls"	[label=calls,
 			lp="1538.9,435.83",
 			pos="e,1649.5,385.39 1416.5,464.99 1492.6,439 1581,408.79 1638.7,389.07",
-			style=dashed];	15	[height=1.1736,
-			label="[15] is_fraudulent = True
+			style=dashed];
+		15	[height=1.1736,
+			label="is_fraudulent = True
 verification_required = True
 risk_score += 20
 ",
@@ -142,16 +150,18 @@ risk_score += 20
 			lp="1356.5,366.96",
 			pos="e,1120.3,288.05 1408.9,464.85 1420.6,453.8 1423.6,441.17 1410.5,427.21 1368.5,382.35 1177.9,452.67 1134.5,409.21 1106.1,380.8 1110.9,\
 330.66 1117.6,299.14"];
-		15 -> 14	[pos="e,1090.8,288.03 1007.8,329.4 1032.3,317.19 1058.8,303.94 1080.5,293.13"];	17	[height=0.83478,
-			label="[17] is_blocked = True
+		15 -> 14	[pos="e,1090.8,288.03 1007.8,329.4 1032.3,317.19 1058.8,303.94 1080.5,293.13"];
+		17	[height=0.83478,
+			label="is_blocked = True
 risk_score = 100
 ",
 			pos="1082.5,168.41",
 			width=2.8186];
 		14 -> 17	[label="current_transaction.location in blacklisted_locations",
 			lp="1148.5,225.08",
-			pos="e,1000.2,186.41 1004.1,253.02 984.79,248.13 969.03,241.81 962.48,233.71 947.01,214.56 964,200.34 989.59,190.22"];	18	[height=0.83478,
-			label="[18] return FraudCheckResult(is_fraudulent, is_blocked, verification_required,
+			pos="e,1000.2,186.41 1004.1,253.02 984.79,248.13 969.03,241.81 962.48,233.71 947.01,214.56 964,200.34 989.59,190.22"];
+		18	[height=0.83478,
+			label="return FraudCheckResult(is_fraudulent, is_blocked, verification_required,
     risk_score)
 ",
 			pos="1251.5,71.302",

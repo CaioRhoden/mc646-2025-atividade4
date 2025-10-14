@@ -51,6 +51,16 @@ class FlightBookingSystem:
         # Garante que o preço não seja negativo
         if final_price < 0:
             final_price = 0
+        
+        # CÓDIGO INALCANÇÁVEL INTENCIONAL (para fins educacionais)
+        # Esta condição é logicamente impossível porque:
+        # 1. Se passengers > available_seats, já retornou na linha 29
+        # 2. Se chegou aqui, passengers <= available_seats (validação passou)
+        # 3. Logo, a condição abaixo NUNCA pode ser verdadeira
+        if passengers > available_seats and final_price > 0:
+            # Esta linha nunca será executada (código morto)
+            final_price = final_price * 0.5
+            confirmation = False
 
         # Lógica para cancelamentos
         if is_cancellation:
