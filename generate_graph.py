@@ -10,4 +10,4 @@ if __name__ == "__main__":
 
     cfg = CFGBuilder().build_from_file(args.name, args.script)
 
-    cfg.build_visual(f"cfg/{args.name}", "png")
+    cfg.build_visual(f"cfg/{args.name}", "dot")
