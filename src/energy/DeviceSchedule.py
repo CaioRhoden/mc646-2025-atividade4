@@ -10,5 +10,3 @@ class DeviceSchedule:
     def __repr__(self) -> str:
         """Retorna uma representação legível do objeto."""
         return f"DeviceSchedule(device_name='{self.device_name}', scheduled_time='{self.scheduled_time}')"
-
-
