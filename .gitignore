@@ -104,3 +104,6 @@ celerybeat.pid
 # OS files
 .DS_Store
 Thumbs.db
+
+# Mutmut cache
+.mutmut_cache
