@@ -1,8 +1,0 @@
-{
-    "exit_code_by_key": {
-        "fraud.Transaction.x\u01c1Transaction\u01c1__init____mutmut_1": 1,
-        "fraud.Transaction.x\u01c1Transaction\u01c1__init____mutmut_2": 1,
-        "fraud.Transaction.x\u01c1Transaction\u01c1__init____mutmut_3": 1
-    },
-    "hash_by_function_name": {}
-}

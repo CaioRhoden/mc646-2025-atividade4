@@ -1,9 +1,0 @@
-{
-    "exit_code_by_key": {
-        "flight.BookingResult.x\u01c1BookingResult\u01c1__init____mutmut_1": 1,
-        "flight.BookingResult.x\u01c1BookingResult\u01c1__init____mutmut_2": 1,
-        "flight.BookingResult.x\u01c1BookingResult\u01c1__init____mutmut_3": 1,
-        "flight.BookingResult.x\u01c1BookingResult\u01c1__init____mutmut_4": 1
-    },
-    "hash_by_function_name": {}
-}

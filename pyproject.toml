@@ -3,20 +3,13 @@ name = "mc646-atividade5"
 version = "0.1.0"
 
 dependencies = [
-    "pytest==8.4.2",
-    "staticfg==0.9.5",
-    "pytest-cov==7.0.0",
+	"pytest==8.4.2",
+	"staticfg==0.9.5",
+	"pytest-cov==7.0.0",
 ]
 
 [tool.mutmut]
-paths_to_mutate = [
-    "src/energy/DeviceSchedule.py",
-    "src/energy/EnergyManagementResult.py",
-    "src/energy/EnergyManagementSystem.py",
-    "src/flight/BookingResult.py",
-    "src/flight/FlightBookingSystem.py",
-    "src/fraud/FraudCheckResult.py",
-    "src/fraud/Transaction.py",
-    "src/fraud/FraudDetectionSystem.py"
-]
-runner = "pytest -x"
+paths_to_mutate = "src/energy/EnergyManagementResult.py,src/flight/FlightBookingSystem.py,src/fraud/FraudDetectionSystem.py"
+
+[tool.setuptools]
+packages = ["src"]
