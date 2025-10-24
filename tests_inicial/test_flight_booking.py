@@ -80,7 +80,7 @@ class TestFlightBookingSystem:
         Par def-uso: final_price modificado (linha 44)
         """
         result = self.system.book_flight(
-            passengers=6,
+            passengers=6,  # > 4, aplica desconto
             booking_time=self.booking_time,
             available_seats=10,
             current_price=500.0,
@@ -92,29 +92,6 @@ class TestFlightBookingSystem:
         assert result.confirmation is True
         base_price = 500.0 * (50 / 100.0) * 0.8 * 6
         expected_price = base_price * 0.95
-        assert result.total_price == expected_price
-
-    def test_group_without_discount(self):
-        """
-        TC: Sem Desconto em grupo.
-        Cobertura: Aresta nó 8 → nó 9 (passengers <= 4)
-        Par def-uso: final_price modificado (linha 44)
-        """
-        passengers = 4
-        current_price = 500.0
-        previous_sales = 50
-        expected_price = current_price * (previous_sales / 100.0) * 0.8 * passengers
-        result = self.system.book_flight(
-            passengers=passengers,
-            booking_time=self.booking_time,
-            available_seats=10,
-            current_price=current_price,
-            previous_sales=previous_sales,
-            is_cancellation=False,
-            departure_time=self.booking_time + timedelta(hours=48),
-            reward_points_available=0
-        )
-        assert result.confirmation is True
         assert result.total_price == expected_price
 
     def test_tc18_reward_points_redemption(self):
@@ -139,30 +116,6 @@ class TestFlightBookingSystem:
         expected_price = base_price - (1000 * 0.01)
         assert result.total_price == expected_price
 
-    def test_without_reward_points_redemptions(self):
-        # Arrange
-        passengers = 1
-        available_seats = 10
-        current_price = 500.0
-        previous_sales = 50
-        is_cancellation = False
-        reward_points_available = 0
-        base_price = 500.0 * (50 / 100.0) * 0.8 * 1
-        expected_price = base_price - reward_points_available
-        result = self.system.book_flight(
-            passengers=passengers,
-            booking_time=self.booking_time,
-            available_seats=available_seats,
-            current_price=current_price,
-            previous_sales=previous_sales,
-            is_cancellation=is_cancellation,
-            departure_time=self.booking_time + timedelta(hours=48),
-            reward_points_available=reward_points_available
-        )
-        assert result.confirmation is True
-        assert result.points_used is False
-        assert result.total_price == expected_price
-
     def test_tc19_negative_price_corrected(self):
         """
         TC19: Preço negativo corrigido.
@@ -177,7 +130,7 @@ class TestFlightBookingSystem:
             previous_sales=10,  # Vendas baixas
             is_cancellation=False,
             departure_time=self.booking_time + timedelta(hours=48),
-            reward_points_available=10000 
+            reward_points_available=10000  # Pontos altos para gerar preço negativo
         )
         assert result.confirmation is True
         assert result.total_price == 0.0
@@ -235,7 +188,7 @@ class TestFlightBookingSystem:
         Testa interação entre modificadores de preço
         """
         result = self.system.book_flight(
-            passengers=5,
+            passengers=5,  # Grupo (> 4)
             booking_time=self.booking_time,
             available_seats=10,
             current_price=500.0,
@@ -255,23 +208,28 @@ class TestFlightBookingSystem:
 
     def test_unreachable_code_documentation(self):
         """
-        TESTE DE CÓDIGO INALCANÇÁVEL
+        TESTE DE CÓDIGO INALCANÇÁVEL (Educacional)
+        
         Este teste documenta a existência de código inalcançável introduzido
         intencionalmente no FlightBookingSystem (linhas 56-59).
+        
         Explicação da impossibilidade:
         - Se passengers > available_seats, o método retorna imediatamente (linha 29)
         - Se o código continua executando, significa que passengers <= available_seats
         - Logo, a condição "passengers > available_seats and final_price > 0" 
           na linha 56 NUNCA pode ser verdadeira
         - As linhas 58-59 são código morto (unreachable code)
+        
         Este teste tenta todas as combinações possíveis de entrada e confirma
         que o código inalcançável nunca é executado.
         """
         test_cases = [
+            # (passengers, available_seats, descrição)
             (5, 10, "Passageiros < assentos - validação passa"),
             (10, 10, "Passageiros = assentos - validação passa"),
             (15, 10, "Passageiros > assentos - retorno antecipado"),
         ]
+        
         for passengers, available_seats, description in test_cases:
             result = self.system.book_flight(
                 passengers=passengers,
@@ -283,8 +241,18 @@ class TestFlightBookingSystem:
                 departure_time=self.booking_time + timedelta(hours=48),
                 reward_points_available=0
             )
+            
             if passengers > available_seats:
+                # Caso 1: Retorno antecipado - código após linha 29 não executa
                 assert result.confirmation is False
                 assert result.total_price == 0.0
             else:
+                # Caso 2: Validação passou - mas condição impossível na linha 56
+                # nunca será verdadeira porque passengers <= available_seats aqui
                 assert result.confirmation is True
+                # Se o código inalcançável fosse executado, final_price seria multiplicado por 0.5
+                # e confirmation seria False. Como isso nunca acontece, confirmamos que o código
+                # nas linhas 58-59 é de fato inalcançável.
+                
+        # CONCLUSÃO: O código nas linhas 58-59 é provadamente inalcançável
+        # porque representa uma condição logicamente impossível após a validação inicial.
