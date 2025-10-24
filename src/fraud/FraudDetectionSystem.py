@@ -1,5 +1,5 @@
-from fraud.Transaction import Transaction
-from fraud.FraudCheckResult import FraudCheckResult
+from src.fraud.Transaction import Transaction
+from src.fraud.FraudCheckResult import FraudCheckResult
 
 
 class FraudDetectionSystem:

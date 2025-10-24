@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from energy.DeviceSchedule import DeviceSchedule
+from src.energy.DeviceSchedule import DeviceSchedule
 
 
 class TestDeviceSchedule:

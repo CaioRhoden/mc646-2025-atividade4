@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
-from energy.EnergyManagementSystem import SmartEnergyManagementSystem
-from energy.DeviceSchedule import DeviceSchedule
+from src.energy.EnergyManagementSystem import SmartEnergyManagementSystem
+from src.energy.DeviceSchedule import DeviceSchedule
 
 
 class TestEnergyManagementSystem:

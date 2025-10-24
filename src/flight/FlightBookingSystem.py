@@ -1,5 +1,5 @@
 from datetime import datetime
-from flight.BookingResult import BookingResult
+from src.flight.BookingResult import BookingResult
 
 class FlightBookingSystem:
     """
