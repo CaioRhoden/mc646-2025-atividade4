@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
-from flight.FlightBookingSystem import FlightBookingSystem
+from src.flight.FlightBookingSystem import FlightBookingSystem
 
 
 class TestFlightBookingSystem:
