@@ -94,6 +94,38 @@ class TestFlightBookingSystem:
         expected_price = base_price * 0.95
         assert result.total_price == expected_price
 
+    def test_group_without_discount(self):
+        """
+        TC: Sem Desconto em grupo.
+        Cobertura: Aresta nó 8 → nó 9 (passengers <= 4)
+        Par def-uso: final_price modificado (linha 44)
+        """
+        # Arrange
+        passengers = 4
+        current_price = 500.0
+        previous_sales = 50
+        # Nâo aplica o desconto
+        expected_price = current_price * (previous_sales / 100.0) * 0.8 * passengers
+
+        
+        # Act
+        result = self.system.book_flight(
+            passengers=passengers,
+            booking_time=self.booking_time,
+            available_seats=10,
+            current_price=current_price,
+            previous_sales=previous_sales,
+            is_cancellation=False,
+            departure_time=self.booking_time + timedelta(hours=48),
+            reward_points_available=0
+        )
+
+        # Assert
+        assert result.confirmation is True
+        assert result.total_price == expected_price
+
+
+
     def test_tc18_reward_points_redemption(self):
         """
         TC18: Resgate de pontos de recompensa.
@@ -115,6 +147,37 @@ class TestFlightBookingSystem:
         base_price = 500.0 * (50 / 100.0) * 0.8 * 1
         expected_price = base_price - (1000 * 0.01)
         assert result.total_price == expected_price
+
+    def test_without_reward_points_redemptions(self):
+        # Arrange
+        passengers = 1
+        available_seats = 10
+        current_price = 500.0
+        previous_sales = 50
+        is_cancellation = False
+        reward_points_available = 0
+        base_price = 500.0 * (50 / 100.0) * 0.8 * 1
+        # Sem o desconto dos pontos
+        expected_price = base_price - reward_points_available
+
+        # Act
+        result = self.system.book_flight(
+            passengers=passengers,
+            booking_time=self.booking_time,
+            available_seats=available_seats,
+            current_price=current_price,
+            previous_sales=previous_sales,
+            is_cancellation=is_cancellation,
+            departure_time=self.booking_time + timedelta(hours=48),
+            reward_points_available=reward_points_available
+        )
+
+        # Assert
+        assert result.confirmation is True
+        assert result.points_used is False
+        assert result.total_price == expected_price
+
+    
 
     def test_tc19_negative_price_corrected(self):
         """
