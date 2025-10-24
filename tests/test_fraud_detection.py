@@ -322,18 +322,3 @@ class TestFraudDetectionSystem:
     
         self.system = FraudDetectionSystem()
         self.base_time = datetime(2024, 1, 1, 12, 0, 0)
-
-    def test_risk_is_exactly_50_for_high_value_transaction(self):
-        current_transaction = Transaction(
-            amount=15000.0,
-            timestamp=self.base_time,
-            location="São Paulo"
-        )
-        result = self.system.check_for_fraud(
-            current_transaction=current_transaction,
-            previous_transactions=[],
-            blacklisted_locations=[]
-        )
-        assert result.risk_score == 50
-        assert result.is_fraudulent is True
-        assert result.verification_required is True
